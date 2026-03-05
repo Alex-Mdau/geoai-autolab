@@ -1,0 +1,17 @@
+geopandas
+folium
+pandas
+numpy
+scikit-learn
+scipy
+matplotlib
+requests
+shapely
+rasterio
+networkx
+plotly
+fastapi
+uvicorn
+pydantic
+pytest
+python-dotenv
