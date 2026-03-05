@@ -41,7 +41,7 @@ git push -u origin main
 Don't wait until Monday — trigger it manually:
 
 1. Go to **Actions** tab
-2. Click **"🚀 Weekly GeoAI Project Generator"**
+2. Click **"Lint"**
 3. Click **"Run workflow"** → **"Run workflow"**
 4. Watch it generate your first project in ~60 seconds!
 
@@ -64,11 +64,11 @@ The system detects the key automatically — no other changes needed.
 
 ## What Happens Automatically
 
-| Schedule | Action |
-|----------|--------|
+| Schedule              | Action                              |
+| --------------------- | ----------------------------------- |
 | Every Monday 9 AM UTC | New project generated and committed |
-| Tue–Sat 2 PM UTC | Daily progress update committed |
-| Always | README updates with latest stats |
+| Tue–Sat 2 PM UTC      | Daily progress update committed     |
+| Always                | README updates with latest stats    |
 
 ---
 
@@ -77,8 +77,8 @@ The system detects the key automatically — no other changes needed.
 ```
 geoai-autolab/
 ├── .github/workflows/
-│   ├── weekly_project.yml      ← runs Mondays
-│   └── daily_activity.yml      ← runs Tue–Sat
+│   ├── lint.yml                ← runs Mondays
+│   └── ci.yml                  ← runs Tue–Sat
 ├── orchestrator/
 │   ├── orchestrator.py         ← main brain
 │   ├── generator.py            ← code generator
@@ -117,4 +117,4 @@ Edit `projects_queue.json` and change `"current_index"` to any number 0–51.
 
 ---
 
-*Questions? Open an issue on GitHub.*
+_Questions? Open an issue on GitHub._

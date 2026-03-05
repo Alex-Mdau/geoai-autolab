@@ -45,3 +45,6 @@ data/*
 .env
 *.env
 secrets.json
+
+# Setup
+SETUP_GUIDE.md

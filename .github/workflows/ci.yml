@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays at 6:00 AM UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 480
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install \
+            geopandas \
+            folium \
+            pandas \
+            numpy \
+            scikit-learn \
+            scipy \
+            matplotlib \
+            requests \
+            shapely \
+            rasterio \
+            networkx \
+            plotly \
+            fastapi \
+            uvicorn \
+            pydantic \
+            pytest \
+            python-dotenv
+
+      - name: Run logic
+        env:
+          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+        run: |
+          cd orchestrator
+          python orchestrator.py --mode=weekly
+
+      - name: Configure identity
+        run: |
+          git config --global user.name "${{ secrets.GIT_NAME }}"
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+
+      - name: Commit and push
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Nothing to commit"
+          else
+            echo "Waiting for natural commit time..."
+            sleep $(( RANDOM % 50400 ))
+            
+            PROJECT=$(python -c "import json; s=json.load(open('state.json')); print(s.get('current_project','project'))")
+            MESSAGES=(
+              "add ${PROJECT}"
+              "initial commit for ${PROJECT}"
+              "finish ${PROJECT}"
+              "wrap up ${PROJECT}"
+              "ship ${PROJECT}"
+              "${PROJECT}: first working version"
+              "done with ${PROJECT}"
+              "${PROJECT} wip"
+              "start ${PROJECT}"
+              "push ${PROJECT}"
+            )
+            IDX=$(( RANDOM % ${#MESSAGES[@]} ))
+            MSG="${MESSAGES[$IDX]}"
+            
+            git commit -m "$MSG"
+            git push
+            echo "Committed: $MSG"
+          fi

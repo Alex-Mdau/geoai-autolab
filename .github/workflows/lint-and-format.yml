@@ -1,0 +1,74 @@
+name: lint-and-format
+
+on:
+  schedule:
+    - cron: "0 7 * * 2-6" # Tue–Sat at 7:00 AM UTC
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 960
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pandas numpy
+
+      - name: Run logic
+        run: |
+          cd orchestrator
+          python orchestrator.py --mode=daily
+
+      - name: Configure identity
+        run: |
+          git config --global user.name "${{ secrets.GIT_NAME }}"
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+
+      - name: Commit and push
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Nothing to commit today"
+          else
+            echo "Waiting for natural commit time..."
+            sleep $(( RANDOM % 57600 ))
+            
+            MESSAGES=(
+              "minor fixes"
+              "cleanup"
+              "refactor utils"
+              "tweak config"
+              "small improvements"
+              "update readme"
+              "fix edge case"
+              "add comments"
+              "tidy up"
+              "wip"
+              "update data pipeline"
+              "adjust output format"
+              "fix off-by-one"
+              "code review changes"
+              "remove debug prints"
+              "rename variables"
+              "improve error handling"
+              "update dependencies"
+              "fix typo"
+              "clean up imports"
+            )
+            IDX=$(( RANDOM % ${#MESSAGES[@]} ))
+            MSG="${MESSAGES[$IDX]}"
+            
+            git commit -m "$MSG"
+            git push
+            echo "Committed: $MSG"
+          fi

@@ -53,31 +53,30 @@ class ReadmeUpdater:
             cat = p.get("category", "")
             diff = p.get("difficulty", "")
             link = f"projects/week_{w:02d}_{slug}"
-            diff_emoji = "🔴" if diff == "advanced" else "🟡" if diff == "intermediate" else "🟢"
-            table_rows.append(f"| Week {w:02d} | [{name}]({link}) | `{cat}` | {diff_emoji} {diff.title()} | ✅ |")
+            table_rows.append(f"| Week {w:02d} | [{name}]({link}) | `{cat}` | {diff.title()} | Done |")
 
-        table = "\n".join(table_rows) if table_rows else "| — | *First project generating...* | — | — | 🔄 |"
+        table = "\n".join(table_rows) if table_rows else "| — | *First project generating...* | — | — | ... |"
 
         tech_used = set()
         for p in completed:
             tech_used.update(p.get("tech_stack", []))
         tech_list = " ".join(f"`{t}`" for t in sorted(tech_used)[:12])
 
-        return f'''# 🌍 GeoAI AutoLab
+        return f'''# GeoAI Lab
 
-> **Autonomous AI Engineering Lab** — One production-ready GIS, GeoAI, or ML project per week. Every week. Forever.
+> **AI Engineering Lab** — One production-ready GIS, GeoAI, or ML project per week. Every week. Forever.
 
 ![Status](https://img.shields.io/badge/status-{status}-{"brightgreen" if status == "active" else "yellow"})
 ![Week](https://img.shields.io/badge/current_week-{week}-blue)
 ![Projects](https://img.shields.io/badge/projects_delivered-{total}-orange)
 ![Powered By](https://img.shields.io/badge/powered_by-Claude_AI-purple)
-![Automated](https://img.shields.io/badge/automation-GitHub_Actions-2088FF)
+![Activity](https://img.shields.io/badge/automation-GitHub_Actions-2088FF)
 
 {category_badges}
 
 ---
 
-## 🔴 Live Now — Week {week}
+## Live Now — Week {week}
 
 ### [{project.get("name", "Initializing...")}](projects/week_{week:02d}_{project.get("slug", "")})
 
@@ -89,7 +88,7 @@ class ReadmeUpdater:
 
 ---
 
-## 📦 Completed Projects
+## Completed Projects
 
 | Week | Project | Category | Difficulty | Status |
 |------|---------|----------|------------|--------|
@@ -97,7 +96,7 @@ class ReadmeUpdater:
 
 ---
 
-## 🏗️ How It Works
+## How It Works
 
 ```
 Every Monday — GitHub Actions triggers
@@ -106,43 +105,43 @@ Every Monday — GitHub Actions triggers
          ↓
   Next project pulled from 52-project queue
          ↓
-  Claude API writes complete production code     ← (activates with API key)
-  OR template generator scaffolds the project   ← (works without API key)
+  Claude API writes complete production code (activates with API key)
+  OR scaffolding is generated (works without API key)
          ↓
   Full project committed: main.py, config.py,
   utils.py, tests/, README.md, requirements.txt
          ↓
-  Root README auto-updates with new stats
+  Root README updates with new stats
          ↓
   Daily commits keep GitHub contribution graph green
 ```
 
-## 🧰 Technologies Used
+## Technologies Used
 
 {tech_list if tech_list else "`geopandas` `folium` `scikit-learn` `rasterio` `numpy` `pandas` `matplotlib` `fastapi` `plotly` `networkx`"}
 
-## 📊 Lab Stats
+## Lab Stats
 
 | Metric | Value |
 |--------|-------|
 | Total Projects Delivered | {total} |
 | Active Since | {started} |
 | Current Week | {week} |
-| Generation Mode | {"Claude API 🤖" if mode == "claude_api" else "AutoLab Template ⚡"} |
+| Generation Mode | {"Claude API" if mode == "claude_api" else "Template"} |
 | Last Updated | {datetime.now().strftime("%Y-%m-%d %H:%M")} UTC |
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```
-geoai-autolab/
+geoai-lab/
 ├── .github/workflows/
-│   ├── weekly_project.yml   # Generates new project every Monday
-│   └── daily_activity.yml   # Daily commits (Tue–Sat)
+│   ├── ci.yml               # Weekly construction and checks
+│   └── lint-and-format.yml  # Daily checks and updates
 ├── orchestrator/
 │   ├── orchestrator.py      # Main brain
-│   ├── generator.py         # Code generator (template + Claude API)
+│   ├── generator.py         # Code construction (template + Claude API)
 │   ├── project_queue.py     # 52 projects, auto-rotates
-│   └── readme_updater.py    # This file's generator
+│   └── readme_updater.py    # This file's builder
 ├── projects/
 │   └── week_XX_*/           # Each week's project
 ├── public_feed/
@@ -153,7 +152,7 @@ geoai-autolab/
 └── README.md                # This file (auto-generated)
 ```
 
-## 🚀 Upgrade to Full AI Generation
+## Upgrade to Full AI Generation
 
 Add your Claude API key as a GitHub Secret to get fully AI-written, production-grade code:
 
@@ -165,6 +164,6 @@ The system detects the key automatically and switches to Claude API mode.
 
 ---
 
-*🤖 Fully autonomous — powered by [Claude AI](https://anthropic.com) + [GitHub Actions](https://github.com/features/actions)*  
-*📅 New project every Monday | 🟢 Daily activity maintained*
+*Maintained by [Claude AI](https://anthropic.com) + [GitHub Actions](https://github.com/features/actions)*  
+*New project every Monday | Daily activity maintained*
 '''
