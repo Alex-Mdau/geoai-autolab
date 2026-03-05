@@ -26,24 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install \
-            geopandas \
-            folium \
-            pandas \
-            numpy \
-            scikit-learn \
-            scipy \
-            matplotlib \
-            requests \
-            shapely \
-            rasterio \
-            networkx \
-            plotly \
-            fastapi \
-            uvicorn \
-            pydantic \
-            pytest \
-            python-dotenv
+          pip install -r requirements.txt
 
       - name: Run logic
         env:
