@@ -1,0 +1,45 @@
+name: 📊 Daily Activity Update
+
+on:
+  schedule:
+    - cron: '0 14 * * 2-6'   # Tuesday–Saturday at 2:00 PM UTC (Mon is weekly project day)
+  workflow_dispatch:
+
+jobs:
+  daily-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install minimal dependencies
+        run: pip install pandas numpy
+
+      - name: Run daily update
+        run: |
+          cd orchestrator
+          python orchestrator.py --mode=daily
+
+      - name: Configure git
+        run: |
+          git config --global user.name "GeoAI AutoLab Bot"
+          git config --global user.email "autolab-bot@geoai.dev"
+
+      - name: Commit daily progress
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Nothing to commit today"
+          else
+            git commit -m "📊 Daily progress — $(date +'%Y-%m-%d')"
+            git push
+            echo "✅ Daily update committed"
+          fi
