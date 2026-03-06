@@ -55,17 +55,17 @@ class Orchestrator:
         mode = "Claude API" if os.environ.get("CLAUDE_API_KEY") else "Template"
 
         print(f"\n{'='*50}")
-        print(f"🚀 Week {week_num} — GeoAI AutoLab [{mode} Mode]")
+        print(f" Week {week_num} — GeoAI AutoLab [{mode} Mode]")
         print(f"{'='*50}")
 
         project = self.queue.get_next_project()
-        print(f"📋 Project selected: {project['name']}")
+        print(f"Project selected: {project['name']}")
         print(f"🏷  Category: {project['category']} | Difficulty: {project['difficulty']}")
 
         project_dir = BASE_DIR / "projects" / f"week_{week_num:02d}_{project['slug']}"
         project_dir.mkdir(parents=True, exist_ok=True)
 
-        print(f"⚙️  Generating project files...")
+        print(f"Generating project files...")
         self.generator.generate(project, project_dir, week_num)
 
         self.state["current_project"] = project["name"]
@@ -77,8 +77,8 @@ class Orchestrator:
         self.readme_updater.update(self.state, project)
         self.save_state()
 
-        print(f"\n✅ Week {week_num}: '{project['name']}' generated!")
-        print(f"📁 Location: {project_dir.relative_to(BASE_DIR)}")
+        print(f"\n Week {week_num}: '{project['name']}' generated!")
+        print(f"Location: {project_dir.relative_to(BASE_DIR)}")
 
     def run_daily(self):
         """Daily activity update — keeps GitHub green"""
@@ -86,10 +86,10 @@ class Orchestrator:
             print("No active project. Skipping daily update.")
             return
 
-        print(f"📊 Daily update: {self.state['current_project']}")
+        print(f"Daily update: {self.state['current_project']}")
         self.update_activity_feed()
         self.save_state()
-        print("✅ Daily activity recorded")
+        print("Daily activity recorded")
 
     def update_public_feed(self, project, week_num):
         feed_dir = BASE_DIR / "public_feed"
