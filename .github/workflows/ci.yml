@@ -37,8 +37,8 @@ jobs:
 
       - name: Configure identity
         run: |
-          git config --global user.name "${{ secrets.GIT_NAME }}"
-          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+          git config --global user.name "${{ secrets.Alex-Mdau }}"
+          git config --global user.email "${{ secrets.alexokumu006@gmail.com }}"
 
       - name: Commit and push
         run: |
